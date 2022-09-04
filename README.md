@@ -19,6 +19,12 @@ conda install pandas -c anaconda -y
 conda install pyrosetta -c https://USERNAME:PASSWORD@conda.rosettacommons.org -y
 ```
 
+Alternatively, do this:
+
+```
+conda env create -f environment.yml
+```
+
 Next, clone this repository by:
 
 ```bash

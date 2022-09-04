@@ -1,0 +1,16 @@
+name: ddg-predict
+
+channels:
+  - conda-forge
+  - pytorch
+  - https://USERNAME:PASSWORD@conda.rosettacommons.org
+
+dependencies:
+  - python=3.8
+  - biopython=1.79
+  - cudatoolkit=11.3
+  - easydict
+  - pandas
+  - pyrosetta
+  - pytorch=1.10.2
+  - tqdm
