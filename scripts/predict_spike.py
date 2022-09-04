@@ -185,8 +185,6 @@ def predict_multi_protein(data_dir: Path,
     model.load_state_dict(weight)
     model.eval()
 
-    breakpoint()
-
     # Predict DDG for each protein complex
     for pdb_path in tqdm(pdb_paths):
         predict_protein(
@@ -199,9 +197,9 @@ def predict_multi_protein(data_dir: Path,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_dir', type=Path, required=True)
-    parser.add_argument('--save_dir', type=Path, required=True)
-    parser.add_argument('--model', type=str, default='./data/model.pt')
+    parser.add_argument('--data_dir', type=Path, default='../data/cao_omicron/pdb/pdb')
+    parser.add_argument('--save_dir', type=Path, default='../preds/cao_omicron/binding-ddg-predictor')
+    parser.add_argument('--model', type=str, default='data/model.pt')
     parser.add_argument('--device', type=str, default='cuda')
     args = parser.parse_args()
 
