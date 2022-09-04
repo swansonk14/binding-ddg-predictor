@@ -6,13 +6,17 @@ This repository contains the deep learning model introduced in the paper "Deep L
 
 ## Installation
 
-The model is tested with `Python 3.8`, `PyTorch 1.10`, `cudatoolkit 11.3`, and `Biopython 1.79`. The dependencies can be set up using the following commands:
+The model is tested with `Python 3.8`, `PyTorch 1.10`, `cudatoolkit 11.3`, and `Biopython 1.79`. The dependencies can be set up using the following commands.
+
+Note that [PyRosetta](https://www.pyrosetta.org/home) requires a license. Please obtain a license (from [here](https://els2.comotion.uw.edu/product/pyrosetta)) and replace USERNAME and PASSWORD below with those from the license.
 
 ```bash
 conda create --name ddg-predict python=3.8 -y
 conda activate ddg-predict
 conda install pytorch=1.10.2 cudatoolkit=11.3 -c pytorch -y
-conda install biopython=1.79 easydict -c conda-forge -y
+conda install biopython=1.79 easydict tqdm -c conda-forge -y
+conda install pandas -c anaconda -y
+conda install pyrosetta -c https://USERNAME:PASSWORD@conda.rosettacommons.org -y
 ```
 
 Next, clone this repository by:
