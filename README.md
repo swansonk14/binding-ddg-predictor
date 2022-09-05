@@ -19,7 +19,7 @@ conda install pandas -c anaconda -y
 conda install pyrosetta -c https://USERNAME:PASSWORD@conda.rosettacommons.org -y
 ```
 
-Alternatively, do this:
+Alternatively, do this (after modifying USERNAME and PASSWORD in `environment.yml`):
 
 ```
 conda env create -f environment.yml

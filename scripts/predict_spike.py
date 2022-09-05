@@ -2,6 +2,9 @@
 import argparse
 import os
 import sys
+
+import pyrosetta
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from copy import deepcopy
 from pathlib import Path
@@ -10,6 +13,8 @@ from typing import List
 
 import pandas as pd
 import torch
+import pyrosetta
+pyrosetta.init()
 from pyrosetta.io import pose_from_pdb
 from pyrosetta.rosetta.core.io.pdb import dump_pdb
 from pyrosetta.rosetta.core.pose import get_chain_from_chain_id, get_chains, Pose
