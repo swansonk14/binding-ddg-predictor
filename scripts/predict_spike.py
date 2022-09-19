@@ -3,8 +3,6 @@ import argparse
 import os
 import sys
 
-import pyrosetta
-
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from copy import deepcopy
 from pathlib import Path
@@ -12,7 +10,6 @@ from tempfile import NamedTemporaryFile
 from typing import List
 
 import pandas as pd
-import torch
 import pyrosetta
 pyrosetta.init()
 from pyrosetta.io import pose_from_pdb
@@ -83,6 +80,9 @@ def predict_residue(pose: Pose,
                     model: DDGPredictor,
                     device: str) -> List[float]:
     """Predicts DDG for a single residue across all mutations."""
+    # Deepcopy pose to prevent mutations from affecting the pose
+    pose = deepcopy(pose)
+
     # Get wildtype amino acid
     wildtype_amino_acid = AMINO_ACID_3_to_1[pose.residue(residue).name()[:3]]
 
@@ -109,6 +109,14 @@ def predict_residue(pose: Pose,
         else:
             # Mutate and repack pose with mutation
             mutate_residue(pose, residue, amino_acid, REPACK_DISTANCE, DDG_SCORE_FUNCTION)
+
+            # Check if PyRosetta fails to mutate the residue
+            mutated_amino_acid = AMINO_ACID_3_to_1[pose.residue(residue).name()[:3]]
+
+            if mutated_amino_acid != amino_acid:
+                print(f'Failed to mutate {wildtype_amino_acid} to {amino_acid} for residue {residue}')
+                ddg.append(-1.0)
+                continue
 
             # Save mutation pose to PDB file
             dump_pdb(pose, mutation_pdb_file.name)
@@ -166,7 +174,7 @@ def predict_protein(pdb_path: Path,
             model=model,
             device=device
         )
-        for residue in tqdm(spike_residues, leave=False)
+        for residue in tqdm(spike_residues, leave=False, desc='spike residues')
     ]
 
     # Save delta delta G data
@@ -183,7 +191,7 @@ def predict_multi_protein(data_dir: Path,
     pdb_paths = sorted(data_dir.glob('*.pdb'))
 
     # Load model
-    ckpt = torch.load(model)
+    ckpt = torch.load(model, map_location=torch.device(device))
     config = ckpt['config']
     weight = ckpt['model']
     model = DDGPredictor(config.model).to(device)
@@ -191,7 +199,7 @@ def predict_multi_protein(data_dir: Path,
     model.eval()
 
     # Predict DDG for each protein complex
-    for pdb_path in tqdm(pdb_paths):
+    for pdb_path in tqdm(pdb_paths, desc='pdb paths'):
         predict_protein(
             pdb_path=pdb_path,
             save_path=save_dir / pdb_path.with_suffix('.csv').name,
