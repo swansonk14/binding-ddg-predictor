@@ -198,6 +198,9 @@ def predict_multi_protein(data_dir: Path,
     model.load_state_dict(weight)
     model.eval()
 
+    # Create save directory
+    save_dir.mkdir(parents=True, exist_ok=True)
+
     # Predict DDG for each protein complex
     for pdb_path in tqdm(pdb_paths, desc='pdb paths'):
         predict_protein(
