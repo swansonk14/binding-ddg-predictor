@@ -179,7 +179,7 @@ def predict_protein(pdb_path: Path,
 
     # Save delta delta G data
     data = pd.DataFrame(data=ddg_matrix, index=wildtype_residues, columns=AMINO_ACIDS)
-    data.to_csv(save_path)
+    data.to_csv(save_path, index=False)
 
 
 def predict_multi_protein(data_dir: Path,
